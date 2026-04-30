@@ -85,27 +85,25 @@ async function subirImagen() {
     let formData = new FormData();
     formData.append("imagen", file);
 
-    try {
-        let res = await fetch("/upload", {
+   try {
+        const res = await fetch("/upload", {
             method: "POST",
-            headers: { "Authorization": token },
+            headers: { "Authorization": token }, 
             body: formData
         });
 
         if (!res.ok) throw new Error("Error en el servidor");
 
-        let data = await res.json();
-        let url = "/uploads/" + foto;
+        const data = await res.json();
+    
+        const url = "/uploads/" + data.archivo; 
 
-        carpetas[carpetaIndex].imagenes.push(url);
-        guardar();
-        mostrarGaleria();
         alert("Imagen subida con éxito");
+        mostrarGaleria(); 
     } catch (err) {
-        alert("Error subiendo imagen");
         console.error(err);
+        alert("Error subiendo imagen");
     }
-}
 
 /* MOSTRAR GALERÍA */
 function mostrarGaleria() {
