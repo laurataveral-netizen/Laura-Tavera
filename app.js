@@ -25,9 +25,9 @@ async function login() {
         const data = await res.json();
         localStorage.setItem("token", data.token);
         alert("Login exitoso");
-    document.getElementById("loginbox").style.display = "none";
-    document.getElementById("galeria-seccion").style.display = "block";
-    mostrarGaleria();
+        document.getElementById("loginbox").style.display = "none";
+        document.getElementById("galeria-seccion").style.display = "block";
+        mostrarGaleria();
         
     } catch (err) {
         alert("No se pudo conectar con el servidor");
@@ -53,7 +53,7 @@ function crearCarpeta() {
     guardar();
     mostrarCarpetas();
     mostrarGaleria();
-    document.getElementById("nombreCarpeta").value = ""; // Limpiar input
+    document.getElementById("nombreCarpeta").value = ""; 
 }
 
 /* MOSTRAR CARPETAS EN EL SELECT */
@@ -85,7 +85,7 @@ async function subirImagen() {
     let formData = new FormData();
     formData.append("imagen", file);
 
-   try {
+    try {
         const res = await fetch("/upload", {
             method: "POST",
             headers: { "Authorization": token }, 
@@ -96,14 +96,18 @@ async function subirImagen() {
 
         const data = await res.json();
     
+        // Guardamos la URL en la carpeta seleccionada
         const url = "/uploads/" + data.archivo; 
-
+        carpetas[carpetaIndex].imagenes.push(url);
+        
+        guardar();
         alert("Imagen subida con éxito");
         mostrarGaleria(); 
     } catch (err) {
         console.error(err);
         alert("Error subiendo imagen");
     }
+} // <--- AQUÍ FALTABA ESTA LLAVE
 
 /* MOSTRAR GALERÍA */
 function mostrarGaleria() {
