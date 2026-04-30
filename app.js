@@ -59,7 +59,7 @@ async function subirImagen() {
         });
         const data = await res.json();
         if (data.ruta) {
-            // Guardamos solo el nombre del archivo
+             const url = "/uploads/" + data.ruta;
             carpetas[carpetaIndex].imagenes.push(data.ruta);
             guardar();
             alert("Subida con éxito");
