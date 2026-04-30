@@ -5,82 +5,48 @@ function guardar() {
     localStorage.setItem("carpetas", JSON.stringify(carpetas));
 }
 
-/* LOGIN */
 async function login() {
     const user = document.getElementById("user").value;
     const pass = document.getElementById("pass").value;
-
     try {
         const res = await fetch("/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ user, pass })
         });
-
-        if (!res.ok) {
-            alert("Error en login");
-            return;
-        }
-
+        if (!res.ok) return alert("Error en login");
         const data = await res.json();
         localStorage.setItem("token", data.token);
         alert("Login exitoso");
         document.getElementById("loginbox").style.display = "none";
         document.getElementById("galeria-seccion").style.display = "block";
         mostrarGaleria();
-        
     } catch (err) {
-        alert("No se pudo conectar con el servidor");
+        alert("Error de conexión");
     }
 }
 
-/* CREAR CARPETA */
 function crearCarpeta() {
     let nombre = document.getElementById("nombreCarpeta").value;
-    if(nombre === "") {
-        alert("Escribe un nombre");
-        return;
-    }
-
-    let privada = confirm("¿Quieres que la carpeta sea privada?");
-    carpetas.push({
-        nombre: nombre,
-        imagenes: [],
-        privada: privada,
-        mostrar: false
-    });
-
+    if(!nombre) return alert("Escribe un nombre");
+    carpetas.push({ nombre, imagenes: [], privada: confirm("¿Privada?"), mostrar: false });
     guardar();
     mostrarCarpetas();
     mostrarGaleria();
-    document.getElementById("nombreCarpeta").value = ""; 
 }
 
-/* MOSTRAR CARPETAS EN EL SELECT */
 function mostrarCarpetas() {
     let select = document.getElementById("carpetas");
-    if(!select) return; 
+    if(!select) return;
     select.innerHTML = "";
-    carpetas.forEach((c, i) => {
-        select.innerHTML += `<option value="${i}">${c.nombre}</option>`;
-    });
+    carpetas.forEach((c, i) => { select.innerHTML += `<option value="${i}">${c.nombre}</option>`; });
 }
 
-/* SUBIR IMAGEN */
 async function subirImagen() {
-    let fileInput = document.getElementById("imagen");
-    let file = fileInput.files[0];
+    let file = document.getElementById("imagen").files[0];
     let carpetaIndex = document.getElementById("carpetas").value;
     let token = localStorage.getItem("token");
-
-    if (!file || carpetaIndex === "") {
-        alert("Selecciona una imagen y una carpeta");
-        return;
-    }
-    if (!token) {
-        alert("Debes iniciar sesión primero");
-        return;
-    }
+    if (!file || carpetaIndex === "") return alert("Faltan datos");
 
     let formData = new FormData();
     formData.append("imagen", file);
@@ -88,75 +54,48 @@ async function subirImagen() {
     try {
         const res = await fetch("/upload", {
             method: "POST",
-            headers: { "Authorization": token }, 
+            headers: { "Authorization": token },
             body: formData
         });
-
-        if (!res.ok) throw new Error("Error en el servidor");
-
-       const nombreReal = data.ruta
-
-        if (nombreReal) {
-            const url = "/uploads/" + nombreReal; 
-            carpetas[carpetaIndex].imagenes.push(url);
+        const data = await res.json();
+        if (data.ruta) {
+            // Guardamos solo el nombre del archivo
+            carpetas[carpetaIndex].imagenes.push(data.ruta);
             guardar();
-            alert("Imagen subida con éxito");
-            mostrarGaleria(); 
-        } else {
-            alert("Error: El servidor mandó la respuesta pero sin el nombre de la foto");
+            alert("Subida con éxito");
+            mostrarGaleria();
         }
-} 
+    } catch (err) {
+        alert("Error al subir");
+    }
+}
 
-/* MOSTRAR GALERÍA */
 function mostrarGaleria() {
     let div = document.getElementById("galeria");
     if(!div) return;
     div.innerHTML = "";
-
     carpetas.forEach((c, i) => {
-        let icono = c.privada ? "🔒" : "🌍";
         div.innerHTML += `
-            <div style="border:2px solid #000000; margin:5px; padding:5px; border-radius:5px;">
-                <h3>${c.nombre} ${icono}</h3>
-                <button onclick="toggleCarpeta(${i})">
-                    ${c.mostrar ? "Ocultar" : "Ver contenido"}
-                </button>
-                <div id="carpeta-${i}" style="margin-top:10px;"></div>
-            </div>
-        `;
-
+            <div style="border:1px solid #ccc; margin:10px; padding:10px;">
+                <h3>${c.nombre}</h3>
+                <button onclick="toggleCarpeta(${i})">${c.mostrar ? 'Ocultar' : 'Ver'}</button>
+                <div id="folder-${i}"></div>
+            </div>`;
         if(c.mostrar) {
-            let contenedor = document.getElementById(`carpeta-${i}`);
-           c.imagenes.forEach((img, j) => {
-
-    let rutaLimpia = img.startsWith('/uploads/') ? img : '/uploads/' + img;
-    
-    contenedor.innerHTML += `
-        <div style="display:inline-block; text-align:center; margin:5px;">
-            <img src="${rutaLimpia}" style="width:100px; height:100px; object-fit:cover; border-radius:5px;">
-            <br>
-            <button onclick="eliminarImagen(${i}, ${j})">❌</button>
-        </div>
-    `;
-});
+            let cont = document.getElementById(`folder-${i}`);
+            c.imagenes.forEach((img, j) => {
+                // USAMOS RUTA RELATIVA PARA EVITAR EL ERROR DE "MIXED CONTENT"
+                cont.innerHTML += `
+                    <div style="display:inline-block; margin:5px;">
+                        <img src="/uploads/${img}" style="width:100px; height:100px; object-fit:cover;">
+                        <br><button onclick="eliminarImg(${i},${j})">❌</button>
+                    </div>`;
+            });
         }
     });
 }
 
-function toggleCarpeta(index) {
-    carpetas[index].mostrar = !carpetas[index].mostrar;
-    guardar();
-    mostrarGaleria();
-}
-
-function eliminarImagen(carpetaIndex, imagenIndex) {
-    if(confirm("¿Eliminar esta imagen?")) {
-        carpetas[carpetaIndex].imagenes.splice(imagenIndex, 1);
-        guardar();
-        mostrarGaleria();
-    }
-}
-
-/* INICIO */
+function toggleCarpeta(i) { carpetas[i].mostrar = !carpetas[i].mostrar; mostrarGaleria(); }
+function eliminarImg(i, j) { carpetas[i].imagenes.splice(j, 1); guardar(); mostrarGaleria(); }
 mostrarCarpetas();
 mostrarGaleria();
