@@ -3,6 +3,10 @@ const multer = require("multer");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const path = require("path"); // Añade esta línea arriba
+const fs = require('fs');
+if (!fs.existsSync('./uploads')){
+    fs.mkdirSync('./uploads');
+}
 
 const app = express();
 
