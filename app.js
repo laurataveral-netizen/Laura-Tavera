@@ -25,7 +25,10 @@ async function login() {
         const data = await res.json();
         localStorage.setItem("token", data.token);
         alert("Login exitoso");
-        // window.location.href = "galeria.html"; // Descomenta si tienes esa página
+        document.getElementById("seccion-login").style.display = "none";
+        document.getElementById("seccion-galeria").style.display = "block";
+        mostrarGaleria();
+        
     } catch (err) {
         alert("No se pudo conectar con el servidor");
     }
