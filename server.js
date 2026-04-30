@@ -16,7 +16,9 @@ app.get("/", (req, res) => {
 });
 
 const SECRET = "clave_super_segura";
-let usuarios = [];
+let usuarios = [
+    { nombre: "1031811335", pin: "1234" }
+];
     
 
 const storage = multer.diskStorage({
