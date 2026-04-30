@@ -95,7 +95,7 @@ async function subirImagen() {
         if (!res.ok) throw new Error("Error en el servidor");
 
         let data = await res.json();
-        let url = "/uploads/" + data.ruta;
+        let url = "/uploads/" + foto;
 
         carpetas[carpetaIndex].imagenes.push(url);
         guardar();
