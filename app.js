@@ -25,9 +25,9 @@ async function login() {
         const data = await res.json();
         localStorage.setItem("token", data.token);
         alert("Login exitoso");
-        document.getElementById("seccion-login").style.display = "none";
-        document.getElementById("seccion-galeria").style.display = "block";
-        mostrarGaleria();
+    document.getElementById("loginbox").style.display = "none";
+    document.getElementById("galeria-seccion").style.display = "block";
+    mostrarGaleria();
         
     } catch (err) {
         alert("No se pudo conectar con el servidor");
