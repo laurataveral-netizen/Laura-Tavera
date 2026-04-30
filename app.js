@@ -76,7 +76,7 @@ function mostrarGaleria() {
     div.innerHTML = "";
     carpetas.forEach((c, i) => {
         div.innerHTML += `
-            <div style="border:1px solid #ccc; margin:10px; padding:10px;">
+            <div style="border:3px solid #000000; margin:10px; padding:10px;">
                 <h3>${c.nombre}</h3>
                 <button onclick="toggleCarpeta(${i})">${c.mostrar ? 'Ocultar' : 'Ver'}</button>
                 <div id="folder-${i}"></div>
