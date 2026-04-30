@@ -94,7 +94,7 @@ async function subirImagen() {
 
         if (!res.ok) throw new Error("Error en el servidor");
 
-       const nombreReal = data.archivo || data.foto;
+       const nombreReal = data.ruta
 
         if (nombreReal) {
             const url = "/uploads/" + nombreReal; 
@@ -103,7 +103,7 @@ async function subirImagen() {
             alert("Imagen subida con éxito");
             mostrarGaleria(); 
         } else {
-            alert("Error: El servidor no envió el nombre de la imagen");
+            alert("Error: El servidor mandó la respuesta pero sin el nombre de la foto");
         }
 } 
 
