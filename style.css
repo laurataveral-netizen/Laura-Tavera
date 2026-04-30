@@ -1,0 +1,36 @@
+body {
+    font-family: Oswald;
+    background: #f3cccc;
+    padding: 10px;
+}
+
+h1 {
+    color: #080808;
+}
+
+input, select, button {
+    padding: 8px;
+    margin: 5px;
+}
+
+button {
+    background: #12C930;
+    color: #333;
+    border: none;
+    border-radius: 5px;
+}
+
+button:hover {
+    background: #e90707;
+}
+
+#galeria {
+    margin-top: 20px;
+}
+
+#galeria img {
+    width: 120px;
+    margin: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 5px gray;
+}
