@@ -94,20 +94,18 @@ async function subirImagen() {
 
         if (!res.ok) throw new Error("Error en el servidor");
 
-        const data = await res.json();
-    
-        // Guardamos la URL en la carpeta seleccionada
-        const url = "/uploads/" + data.archivo; 
-        carpetas[carpetaIndex].imagenes.push(url);
-        
-        guardar();
-        alert("Imagen subida con éxito");
-        mostrarGaleria(); 
-    } catch (err) {
-        console.error(err);
-        alert("Error subiendo imagen");
-    }
-} // <--- AQUÍ FALTABA ESTA LLAVE
+       const nombreReal = data.archivo || data.foto;
+
+        if (nombreReal) {
+            const url = "/uploads/" + nombreReal; 
+            carpetas[carpetaIndex].imagenes.push(url);
+            guardar();
+            alert("Imagen subida con éxito");
+            mostrarGaleria(); 
+        } else {
+            alert("Error: El servidor no envió el nombre de la imagen");
+        }
+} 
 
 /* MOSTRAR GALERÍA */
 function mostrarGaleria() {
@@ -129,15 +127,18 @@ function mostrarGaleria() {
 
         if(c.mostrar) {
             let contenedor = document.getElementById(`carpeta-${i}`);
-            c.imagenes.forEach((img, j) => {
-                contenedor.innerHTML += `
-                    <div style="display:inline-block; text-align:center; margin:5px;">
-                        <img src="${img}" style="width:100px; height:100px; object-fit:cover; border-radius:5px;">
-                        <br>
-                        <button onclick="eliminarImagen(${i}, ${j})">❌</button>
-                    </div>
-                `;
-            });
+           c.imagenes.forEach((img, j) => {
+
+    let rutaLimpia = img.startsWith('/uploads/') ? img : '/uploads/' + img;
+    
+    contenedor.innerHTML += `
+        <div style="display:inline-block; text-align:center; margin:5px;">
+            <img src="${rutaLimpia}" style="width:100px; height:100px; object-fit:cover; border-radius:5px;">
+            <br>
+            <button onclick="eliminarImagen(${i}, ${j})">❌</button>
+        </div>
+    `;
+});
         }
     });
 }
