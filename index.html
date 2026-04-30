@@ -1,14 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Imagenix</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<!DOCTYPE html>
-<html>
-<head>
+    <meta charset="UTF-8">
     <title>Imagenix</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -16,26 +9,30 @@
 
     <h1>Imagenix 📸</h1>
     
-    <h2>Login 🔐</h2>
-    <input id="user" placeholder="Usuario">
-    <input id="pass" type="password" placeholder="Contraseña">
-    <button onclick="login()" class="btn-green">Login</button>
+    <div id="seccion-login">
+        <h2>Login 🔐</h2>
+        <input id="user" placeholder="Usuario" required>
+        <input id="pass" type="password" placeholder="Contraseña" required>
+        <button onclick="login()" class="btn-green">Entrar</button>
+    </div>
 
-     <hr style="border: 0; height: 0px; background-color: #060A36; margin: 25px 0;"> 
-    <h3>Crear carpeta</h3>
-    <input id="nombreCarpeta" placeholder="Nombre carpeta">
-    <button onclick="crearCarpeta()" class="btn-green">Crear</button>
+    <div id="seccion-galeria" style="display: none;">
+        <hr style="border: 0; height: 2px; background-color: #060A36; margin: 25px 0;"> 
+        
+        <h3>Crear carpeta</h3>
+        <input id="nombreCarpeta" placeholder="Nombre carpeta">
+        <button onclick="crearCarpeta()" class="btn-green">Crear</button>
 
-    <h3>Subir imagen</h3>
-    <input type="file" id="imagen">
-    <select id="carpetas"></select> 
-    <button onclick="subirImagen()" class="btn-green">Subir</button>
+        <h3>Subir imagen</h3>
+        <input type="file" id="imagen">
+        <select id="carpetas"></select> 
+        <button onclick="subirImagen()" class="btn-green">Subir</button>
 
-    <h3>Galería</h3>
-    <div id="galeria"></div>
-   
+        <h3>Galería</h3>
+        <div id="galeria"></div>
+    </div>
 
     <script src="app.js"></script>
-
 </body>
+</html>
 </html>
